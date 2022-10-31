@@ -1,70 +1,26 @@
-# Getting Started with Create React App
+# Web3 examples
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Get ERC20 transfers
 
-## Available Scripts
+There are number of solutions to get ERC20 transfers and the best solutions are to get transfers from covalent, moralis or subgraph. In this example, we use covalanet API to get ERC20 token transfers from user wallet and token address.
 
-In the project directory, you can run:
+API url format: `https://api.covalenthq.com/v1/${networkId}/address/${walletAddr}/transfers_v2/?contract-address=${contractAddr}&key=${apiKey}`
 
-### `npm start`
+## Fetch LP pair data from The Graph
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Given a unix timestamp, we fetch every `PairHourData` record for the DAI/ETH pair from the UniswapV2 Subgraph after the given timestamp.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+The Graph can only return maximum of 1000 items at a time, so your script must handle fetching more than 1000 records. So in this example, we use `hourStartUnix_gt` filter query to get 1000+ records.
 
-### `npm test`
+## On-chain event notifications architecture
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Smart contract
+   We need to have a mapping variable to get email address from wallet address.
+   `mapping(address=>String) addressToEmail`;
 
-### `npm run build`
+2. Backend system
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- We can token transfer events using websocker web3 provider.
+- We can get `to` address from transfer events.
+- We can get matched `email` address by calling on-chain storage `addressToEmail` we defined in the above.
+- We can choose some mail services(nodemailer, twilio sendgrid, etc) for mail notifictions.
